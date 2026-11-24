@@ -34,24 +34,24 @@ F_BODY = font("DejaVuSans.ttf", 21)
 F_FOOT = font("DejaVuSans.ttf", 17)
 
 STORIES = [
-    ("LIBYA  •  CONFLICT", "Ukraine sinks Russian warship",
-     "Naval drones sink the corvette Merkury at Benghazi. Zelensky confirms the strike.",
+    ("LIBYA  •  CONFLICT", "Kyiv defends Libya sinking",
+     "Ukraine insists the sinking of the corvette Merkury was self-defence. The UN seeks a probe.",
      (179, 32, 44), "ship"),
-    ("TECH  •  MARKETS", "Nvidia brings back Huang",
-     "Jensen Huang is reinstated as chief executive after pressure from Trump. Shares jump 31%.",
-     (29, 122, 61), "chip"),
-    ("GAZA  •  CONFLICT", "Strikes in Gaza kill six",
-     "Israeli airstrikes kill at least six Palestinians, including two police officers.",
+    ("SAUDI  •  CONFLICT", "Houthis hit Riyadh tower",
+     "Second strike in five days on the PIF Tower, the capital's tallest; 11 people injured.",
+     (140, 30, 30), "tower"),
+    ("GAZA  •  CONFLICT", "Hamas security chief killed",
+     "Israeli strikes kill Naeem Abu Nahel and six others in Gaza, medics say.",
      (122, 74, 18), "blast"),
+    ("TECH  •  MARKETS", "Huang back at Nvidia",
+     "Board reinstates the CEO after Trump's push; shares jumped about 30%.",
+     (29, 122, 61), "chip"),
     ("GERMANY  •  UKRAINE", "Berlin gets Delta access",
      "Germany is the first country given access to Ukraine's Delta battlefield system.",
      (31, 78, 121), "radar"),
-    ("IRAQ  •  ENERGY", "Baghdad takes Kurdish oilfields",
-     "The prime minister orders the state oil ministry to run fields in Kurdish-held areas.",
-     (138, 90, 0), "drop"),
-    ("NATO  •  SPACE", "NATO vows to defend space",
-     "Chief Mark Rutte warns the alliance will act after reports of a Russian nuclear satellite.",
-     (91, 45, 142), "sat"),
+    ("SPORT  •  FOOTBALL", "Senegal's title restored",
+     "Top sports court reinstates Senegal as 2025 Africa Cup champions.",
+     (91, 45, 142), "ball"),
 ]
 
 
@@ -126,8 +126,34 @@ def icon_sat(d, x, y, s, c):
     d.ellipse([x + s - 22, y + 6, x + s - 6, y + 22], outline=c, width=4)
 
 
+def icon_tower(d, x, y, s, c):
+    d.polygon([(x + 26, y + 92), (x + s - 26, y + 92), (x + s - 34, y + 8),
+               (x + 34, y + 8)], fill=c)
+    d.rectangle([x + s // 2 - 4, y, x + s // 2 + 4, y + 10], fill=c)
+    for r in range(4):
+        wy = y + 22 + r * 16
+        d.line([(x + 32, wy), (x + s - 32, wy)], fill=WHITE, width=3)
+
+
+def icon_ball(d, x, y, s, c):
+    cx, cy = x + s // 2, y + s // 2
+    d.ellipse([x + 8, y + 8, x + s - 8, y + s - 8], outline=c, width=6)
+    px, py = cx, cy - 16
+    pts = []
+    import math
+    for i in range(5):
+        a = -math.pi / 2 + 2 * math.pi * i / 5
+        pts.append((px + 15 * math.cos(a), py + 15 * math.sin(a)))
+    d.polygon(pts, fill=c)
+    for i in range(5):
+        a = -math.pi / 2 + 2 * math.pi * i / 5
+        d.line([(px + 15 * math.cos(a), py + 15 * math.sin(a)),
+                (px + 34 * math.cos(a), py + 34 * math.sin(a))], fill=c, width=4)
+
+
 ICONS = {"ship": icon_ship, "chip": icon_chip, "blast": icon_blast,
-         "radar": icon_radar, "drop": icon_drop, "sat": icon_sat}
+         "radar": icon_radar, "drop": icon_drop, "sat": icon_sat,
+         "tower": icon_tower, "ball": icon_ball}
 
 
 def main():
@@ -138,7 +164,7 @@ def main():
     d.rectangle([0, 0, W, 168], fill=NAVY)
     d.text((32, 22), "TUESDAY  •  THE WORLD IN ONE DAY", font=F_SUB, fill=GOLD)
     d.text((32, 58), "24 NOVEMBER 2026", font=F_TITLE, fill=WHITE)
-    d.text((32, 128), "Six stories that defined the day, from Benghazi to Berlin.",
+    d.text((32, 128), "Six stories that defined the day, from Riyadh to Rabat.",
            font=F_SUB, fill=(200, 205, 220))
 
     # Story grid: 2 columns x 3 rows.
@@ -167,7 +193,7 @@ def main():
 
     # Footer band.
     d.rectangle([0, H - footer_h, W, H], fill=NAVY)
-    d.text((32, H - 35), "Drawn by code — no photographs.  Sources: Reuters, BBC, The Guardian, Kyiv Independent.",
+    d.text((32, H - 35), "Drawn by code — no photographs.  Sources: Reuters, The Wall Street Journal, AP, The Times, Kyiv Independent.",
            font=F_FOOT, fill=(200, 205, 220))
 
     img.save(OUT, "PNG", optimize=True)
